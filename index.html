@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF World</title>
+  <link rel="stylesheet" href="design.css">
+  <script type="text/javascript" src="/eel.js"></script>
+</head>
+
+<body>
+    <h1>PDF Tools</h1>
+    <div class="container">
+        <div class="tile red" id="red-tile" data-type="red">
+                <div class="tile-icon"><img src="image/merge.png" alt="merge icon"></div>
+                <div class="tile-title">Merge Pdf</div>
+                <div class="tile-description">Click to select files</div>
+        </div>
+        <div class="tile red" id="red1-tile" data-type="red">
+                <div class="tile-icon"><img src="image/split.png" alt="split icon"></div>
+                <div class="tile-title">Split Pdf</div>
+                <div class="tile-description">create sub PDF</div>
+        </div>
+        <div class="tile blue" id="blue-tile" data-type="blue" >                
+                <div class="tile-title">Decrypt Pdf</div>
+                <div class="tile-description">Remove password from pdf</div>
+        </div>
+
+        <div class="tile blue" id="blue1-tile" data-type="blue" >                
+                <div class="tile-title">Encrypt Pdf</div>
+                <div class="tile-description">Make PDF password protected</div>
+        </div>
+        
+        <div class="tile green" id="green-tile" data-type="green" >
+                <div class="tile-icon"><img src="image/pdf.png" alt="pdf logo"></div>
+                <div class="tile-title">Compress</div>
+                <div class="tile-description">Lossless Algo</div>
+        </div>
+    </div>
+    
+    <div class="notification-area" id="notification-area">
+    </div>
+<div class="destination-path" style="position: fixed; bottom: 30px; left: 15px;"><button id="set-destination-btn" class="mui-btn mui-btn--raised mui-btn--primary">open Destination folder</button></div>
+
+</div>    
+</body>
+    <script type="text/javascript" src="news.js"></script>
+</body>
+</html>
