@@ -26,7 +26,6 @@ def open_multiple_file():
         return "1"
 
 
-
 def open_file():
     try:
         root = tk.Tk()
@@ -43,16 +42,23 @@ def open_file():
         return "1"
 
 
-
 def get_password(eCode):
     try:
         root = tk.Tk()
         root.withdraw()
         root.attributes('-topmost', True)
         if eCode == '5':
-            password = simpledialog.askstring(title="Password", prompt="Incorrect password. Please enter the correct password: ", show='*')
+            password = simpledialog.askstring(
+                title="Password",
+                prompt="Incorrect password. Please enter the correct password: ",
+                show='*'
+            )
         else:
-            password = simpledialog.askstring(title="Password", prompt="Enter the PDF password: ", show='*')
+            password = simpledialog.askstring(
+                title="Password",
+                prompt="Enter the PDF password: ",
+                show='*'
+            )
         if password:
             return password
         else:
@@ -64,12 +70,16 @@ def get_password(eCode):
     finally:
         root.destroy()
 
+
 def get_pages():
     try:
         root = tk.Tk()
         root.withdraw()
         root.attributes('-topmost', True)
-        pages = simpledialog.askstring(title="Pages", prompt="Enter the page numbers(either use ',' or '-') to split the PDF: ")
+        pages = simpledialog.askstring(
+            title="Pages",
+            prompt="Enter the page numbers(either use ',' or '-') to split the PDF: "
+        )
         if re.fullmatch(r'(\d+(-\d+)?)(,(\d+(-\d+)?))*', pages):
             pages = pages.split(",")
             a = set()
@@ -96,6 +106,7 @@ def merge_pdf():
     try:
         output = open_multiple_file()
         if output != "1":
+            eel.showLoadingBar()
             merger = PdfWriter()
             for pdf in output.split("|"):
                 merger.append(pdf)
@@ -108,30 +119,32 @@ def merge_pdf():
         print(f"An error occurred: {e}")
         return "1"
 
+
 @eel.expose
 def split_pdf():
     try:
         output = open_file()
         if output != "1":
+            eel.showLoadingBar()
             reader = PdfReader(output)
             writer = PdfWriter()
             pages = get_pages()
             if pages:
                 for page in pages:
-                    writer.add_page(reader.pages[page-1])
+                    if page <= len(reader.pages):
+                        writer.add_page(reader.pages[page - 1])
                 writer.write(f"{dest_path}split_pdf_{randint(101,999)}.pdf")
                 writer.close()
                 return "0"
             else:
                 return "1"
-            return "0"
         else:
             return "1"
     except Exception as e:
         print(f"An error occurred: {e}")
         return "1"
-    
-    
+
+
 @eel.expose
 def decrypt_pdf():
     try:
@@ -141,18 +154,19 @@ def decrypt_pdf():
             writer = PdfWriter()
             if reader.is_encrypted:
                 password = get_password('0')
+                eel.showLoadingBar()
                 for _ in range(3):
-                  if reader.decrypt(password):
-                     for page in reader.pages:
-                         writer.add_page(page)
-                     writer.write(f"{dest_path}decrypted_{randint(101,999)}.pdf")
-                     writer.close()
-                     return "0"
-                  else:
-                     password = get_password('5')
+                    if reader.decrypt(password):
+                        for page in reader.pages:
+                            writer.add_page(page)
+                        writer.write(f"{dest_path}decrypted_{randint(101,999)}.pdf")
+                        writer.close()
+                        return "0"
+                    else:
+                        password = get_password('5')
             else:
                 for page in reader.pages:
-                         writer.add_page(page)
+                    writer.add_page(page)
                 writer.write(f"{dest_path}decrypted_{randint(101,999)}.pdf")
                 writer.close()
                 return "0"
@@ -171,6 +185,7 @@ def encrypt_pdf():
             reader = PdfReader(output)
             writer = PdfWriter()
             password = get_password('0')
+            eel.showLoadingBar()
             for page in reader.pages:
                 writer.add_page(page)
             writer.encrypt(user_pwd=password, owner_pwd=None, use_128bit=True)
@@ -184,7 +199,6 @@ def encrypt_pdf():
         return "1"
 
 
-
 @eel.expose
 def compress_pdf():
     try:
@@ -192,8 +206,9 @@ def compress_pdf():
         if output != "1":
             reader = PdfReader(output)
             writer = PdfWriter()
+            eel.showLoadingBar()
             for page in reader.pages:
-                page.compress_content_streams()  
+                page.compress_content_streams()
                 writer.add_page(page)
             writer.write(f"{dest_path}compressed_{randint(101,999)}.pdf")
             return "0"
@@ -202,6 +217,7 @@ def compress_pdf():
     except Exception as e:
         print(f"An error occurred: {e}")
         return "1"
+
 
 @eel.expose
 def open_dest():
